@@ -3,7 +3,7 @@ Deployinator for deployinate
 
 # Install
 ```
-npm install -g deployinator
+npm install -g the-real-deployinator
 ```
 
 # Environment
