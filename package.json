@@ -1,0 +1,36 @@
+{
+  "name": "deployinator",
+  "version": "1.0.0",
+  "description": "Deployinator for deployinate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "deployinator": "./command.js",
+    "deployinator-deploy": "./command-deploy.js",
+    "deployinator-status": "./command-status.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/octoblu/deployinator.git"
+  },
+  "keywords": [
+    "DEPLOY"
+  ],
+  "author": "Octoblu <npm@octoblu.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/octoblu/deployinator/issues"
+  },
+  "homepage": "https://github.com/octoblu/deployinator#readme",
+  "dependencies": {
+    "coffee-script": "^1.9.3",
+    "colors": "^1.1.2",
+    "commander": "^2.8.1",
+    "debug": "^2.2.0",
+    "jsome": "^1.3.2",
+    "lodash": "^3.10.1",
+    "request": "^2.60.0"
+  }
+}
