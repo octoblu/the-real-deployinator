@@ -7,6 +7,7 @@ class Command
       .version packageJSON.version
       .command 'deploy', 'deploy an application'
       .command 'status', 'status of a deploy'
+      .command 'rollback', 'rollback a deploy'
       .parse process.argv
 
     unless commander.runningCommand
