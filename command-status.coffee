@@ -29,6 +29,10 @@ class DeployinatorStatus
     @deploy()
 
   deploy: =>
+    console.log ""
+    console.log "=>", @project_name
+    console.log ""
+    
     requestOptions =
       json: true
       method: 'GET'

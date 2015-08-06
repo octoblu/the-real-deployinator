@@ -29,6 +29,10 @@ class DeployinatorRollback
     @deploy()
 
   deploy: =>
+    console.log ""
+    console.log "=>", @project_name
+    console.log ""
+
     requestOptions =
       json: true
       method: 'GET'
@@ -39,11 +43,15 @@ class DeployinatorRollback
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("Deploy failed") if response.statusCode >= 400
+      return @die new Error("Rollback failed") if response.statusCode >= 400
       activeColor = body?.service?.active
 
-      console.log colors.red "Rolling back #{@project_name}..."
       console.log "Active color is: #{colors[activeColor] activeColor}"
+      if activeColor == 'green'
+        newColor = 'blue'
+      else
+        newColor = 'green'
+      console.log "Switching to #{colors[newColor] newColor}"
 
       requestOptions =
         json: true
@@ -54,12 +62,12 @@ class DeployinatorRollback
           password: @PASSWORD
       debug 'requestOptions', requestOptions
       request requestOptions, (error, response, body) =>
-        if activeColor == 'green'
-          newColor = 'blue'
-        else
-          newColor = 'green'
+        return @die error if error?
+        return @die new Error("Rollback failed") if response.statusCode >= 400
 
-        console.log "Switching to #{colors[newColor] newColor}"
+        console.log "Started healthcheck for #{colors[newColor] "#{@user}-#{@project_name}-#{newColor}"}"
+        console.log ""
+
         process.exit 0
 
   die: (error) =>

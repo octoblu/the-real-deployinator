@@ -26,6 +26,9 @@ class DeployinatorList
     @deploy()
 
   deploy: =>
+    console.log ""
+    console.log "=>", @project_name
+    console.log ""
     requestOptions =
       json: true
       method: 'GET'
@@ -36,9 +39,6 @@ class DeployinatorList
     request requestOptions, (error, response, body) =>
       return @die error if error?
       return @die new Error("List failed") if response.statusCode >= 400
-      console.log ""
-      console.log "=>", @project_name
-      console.log ""
       console.log colors.green "Available Tags"
       console.log colors.gray  "=============="
       tags = _.uniq _.pluck body?.tags, 'name'

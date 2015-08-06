@@ -7,13 +7,12 @@ debug     = require('debug')('deployinator:deploy')
 class DeployinatorDeploy
   parseOptions: =>
     commander
-      .usage '[options] <project name>'
-      .option '-t, --tag <tag>', 'Tag to deploy'
+      .usage '[options] <project name> <tag>'
       .option '-u, --user <user>', '(optional) Docker image user [octoblu]'
       .parse process.argv
 
     @project_name = _.first commander.args
-    @tag = commander.tag
+    @tag = commander.args[1]
     @user = commander.user ? 'octoblu'
     @USERNAME = process.env.DEPLOYINATOR_UUID
     @PASSWORD = process.env.DEPLOYINATOR_TOKEN
@@ -27,12 +26,15 @@ class DeployinatorDeploy
     return @die new Error('Missing DEPLOYINATOR_TOKEN in environment') unless @PASSWORD?
     return @die new Error('Missing DEPLOYINATOR_DOCKER_PASS in environment') unless @DOCKER_PASS?
     return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @HOST?
-    return @die new Error('Missing project name') unless @project_name?
-    return @die new Error('Missing tag to deploy') unless @tag?
+    return commander.outputHelp() unless @project_name? && @tag?
 
     @deploy()
 
   deploy: =>
+    console.log ""
+    console.log "=>", @project_name
+    console.log ""
+
     requestOptions =
       json:
         repository: "#{@user}/#{@project_name}"
@@ -49,7 +51,8 @@ class DeployinatorDeploy
       return @die error if error?
       return @die new Error("Deploy failed") if response.statusCode >= 400
       debug 'response', body
-      console.log 'it has been done.'
+      console.log 'Deployed', colors.yellow @tag
+      console.log ""
 
   die: (error) =>
     if 'Error' == typeof error
