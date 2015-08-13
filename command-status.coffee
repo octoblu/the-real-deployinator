@@ -10,6 +10,7 @@ class DeployinatorStatus
     commander
       .usage '[options] <project name>'
       .option '-u, --user <user>', 'Docker image user [octoblu]'
+      .option '-p, --pretty <user>', 'Pretty print json [false]'
       .parse process.argv
 
     @project_name = _.first commander.args
@@ -17,6 +18,7 @@ class DeployinatorStatus
     @USERNAME = process.env.DEPLOYINATOR_UUID
     @PASSWORD = process.env.DEPLOYINATOR_TOKEN
     @HOST = process.env.DEPLOYINATOR_HOST
+    @pretty = commander.pretty ? false
 
   run: =>
     @parseOptions()
@@ -40,7 +42,8 @@ class DeployinatorStatus
     request requestOptions, (error, response, body) =>
       return @die error if error?
       return @die new Error("Deploy failed") if response.statusCode >= 400
-      jsome body
+      jsome body if @pretty
+      console.log body if @pretty
 
   die: (error) =>
     if 'Error' == typeof error
