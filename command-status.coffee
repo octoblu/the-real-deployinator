@@ -43,7 +43,7 @@ class DeployinatorStatus
       return @die error if error?
       return @die new Error("Deploy failed") if response.statusCode >= 400
       jsome body if @pretty
-      console.log body unless @pretty
+      console.log JSON.stringify(body, null, 2) unless @pretty
 
   die: (error) =>
     if 'Error' == typeof error
