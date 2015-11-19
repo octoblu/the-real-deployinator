@@ -1,10 +1,10 @@
 {
   "name": "the-real-deployinator",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Deployinator for deployinate",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "exit 0"
   },
   "bin": {
     "t1000-active": "./command-active.js",
