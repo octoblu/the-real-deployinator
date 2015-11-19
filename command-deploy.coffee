@@ -39,8 +39,7 @@ class DeployinatorDeploy
       json:
         repository: "#{@user}/#{@project_name}"
         docker_url: "quay.io/#{@user}/#{@project_name}"
-        updated_tags:
-          "#{@tag}": "#{@DOCKER_PASS}"
+        updated_tags: [@tag]
       method: 'POST'
       uri: "https://#{@HOST}/deploy"
       auth:
