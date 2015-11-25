@@ -41,7 +41,7 @@ class DeployinatorStatus
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("Deploy failed") if response.statusCode >= 400
+      return @die new Error("[#{response.statusCode}] Status failed: #{body}") if response.statusCode >= 400
       jsome body if @pretty
       console.log JSON.stringify(body, null, 2) unless @pretty
 

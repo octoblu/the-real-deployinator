@@ -43,7 +43,7 @@ class DeployinatorRollback
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("Rollback failed") if response.statusCode >= 400
+      return @die new Error("[#{response.statusCode}] Rollback failed: #{body}") if response.statusCode >= 400
       activeColor = body?.service?.active
 
       console.log "Active color is: #{colors[activeColor] activeColor}"

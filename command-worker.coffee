@@ -41,14 +41,14 @@ class DeployinatorWorker
         docker_url: "quay.io/#{@user}/#{@project_name}"
         updated_tags: [@tag]
       method: 'POST'
-      uri: "https://#{@HOST}/worker/deploy"
+      uri: "https://#{@HOST}/workers/deploy"
       auth:
         user: @USERNAME
         password: @PASSWORD
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("Deploy failed") if response.statusCode >= 400
+      return @die new Error("[#{response.statusCode}] Deploy failed: #{body}") if response.statusCode >= 400
       debug 'response', body
       console.log 'Deployed', colors.yellow @tag
       console.log ""

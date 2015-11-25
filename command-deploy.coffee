@@ -48,7 +48,7 @@ class DeployinatorDeploy
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("Deploy failed") if response.statusCode >= 400
+      return @die new Error("[#{response.statusCode}] Deploy failed: #{body}") if response.statusCode >= 400
       debug 'response', body
       console.log 'Deployed', colors.yellow @tag
       console.log ""

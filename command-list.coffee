@@ -38,7 +38,7 @@ class DeployinatorList
     debug 'requestOptions', requestOptions
     request requestOptions, (error, response, body) =>
       return @die error if error?
-      return @die new Error("List failed") if response.statusCode >= 400
+      return @die new Error("[#{response.statusCode}] List failed: #{body}") if response.statusCode >= 400
       console.log colors.green "Available Tags"
       console.log colors.gray  "=============="
       tags = _.uniq _.pluck body?.tags, 'name'
