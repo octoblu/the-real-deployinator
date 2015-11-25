@@ -10,6 +10,7 @@ class Command
       .command 'list', 'list available tags'
       .command 'status', 'status of a deploy'
       .command 'rollback', 'rollback a deploy'
+      .command 'worker', 'deploy a worker'
       .parse process.argv
 
     unless commander.runningCommand

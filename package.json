@@ -1,6 +1,6 @@
 {
   "name": "the-real-deployinator",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Deployinator for deployinate",
   "main": "index.js",
   "scripts": {
@@ -12,11 +12,13 @@
     "t1000-list": "./command-list.js",
     "t1000-status": "./command-status.js",
     "t1000-rollback": "./command-rollback.js",
+    "t1000-worker": "./command-worker.js",
     "deployinator-active": "./command-active.js",
     "deployinator-deploy": "./command-deploy.js",
     "deployinator-list": "./command-list.js",
     "deployinator-status": "./command-status.js",
     "deployinator-rollback": "./command-rollback.js",
+    "deployinator-worker": "./command-worker.js",
     "t1000": "./command.js",
     "deployinator": "./command.js"
   },
