@@ -13,30 +13,31 @@ class DeployinatorList
       .option '-u, --user <user>', 'Docker image user [octoblu]'
       .parse process.argv
 
-    @project_name = _.first commander.args
-    @user = commander.user ? 'octoblu'
-    @QUAY_TOKEN = process.env.DEPLOYINATOR_QUAY_TOKEN
+    @dockerUser = commander.user ? 'octoblu'
+    @projectName = _.first commander.args
+    @quayToken = process.env.DEPLOYINATOR_QUAY_TOKEN
 
   run: =>
     @parseOptions()
 
-    return @die new Error('Missing DEPLOYINATOR_QUAY_TOKEN in environment') unless @QUAY_TOKEN?
-    return @die new Error('Missing project name') unless @project_name?
+    return @die new Error('Missing DEPLOYINATOR_QUAY_TOKEN in environment') unless @quayToken?
+    return @die new Error('Missing project name') unless @projectName?
 
     @deploy()
 
   deploy: =>
     console.log ""
-    console.log "=>", @project_name
+    console.log "=>", @projectName
     console.log ""
-    requestOptions =
+
+    options =
+      uri: "https://quay.io/api/v1/repository/#{@dockerUser}/#{@projectName}/tag/"
       json: true
-      method: 'GET'
-      uri: "https://quay.io/api/v1/repository/#{@user}/#{@project_name}/tag/"
       auth:
-        bearer: @QUAY_TOKEN
-    debug 'requestOptions', requestOptions
-    request requestOptions, (error, response, body) =>
+        bearer: @quayToken
+
+    debug 'requestOptions', options
+    request.get options, (error, response, body) =>
       return @die error if error?
       return @die new Error("[#{response.statusCode}] List failed: #{body}") if response.statusCode >= 400
       console.log colors.green "Available Tags"

@@ -9,37 +9,38 @@ class DeployinatorActive
   parseOptions: =>
     commander
       .usage '[options] <project name>'
-      .option '-u, --user <user>', 'Docker image user [octoblu]'
+      .option '-h, --host <https://deployinate.octoblu.com>',
+        'URI where deployinate-service is running (env: DEPLOYINATE_HOST)'
       .option '-p, --pretty', 'Pretty print json [false]'
+      .option '-u, --user <octoblu>', 'Docker image user'
       .parse process.argv
 
-    @project_name = _.first commander.args
-    @user = commander.user ? 'octoblu'
-    @USERNAME = process.env.DEPLOYINATOR_UUID
-    @PASSWORD = process.env.DEPLOYINATOR_TOKEN
-    @HOST = process.env.DEPLOYINATOR_HOST
+    @projectName = _.first commander.args
+    @dockerUser = commander.user ? 'octoblu'
+    @host = commander.host ? process.env.DEPLOYINATE_HOST || 'https://deployinate.octoblu.com'
+    @username = process.env.DEPLOYINATOR_UUID
+    @password = process.env.DEPLOYINATOR_TOKEN
     @pretty = commander.pretty ? false
 
   run: =>
     @parseOptions()
 
-    return @die new Error('Missing DEPLOYINATOR_UUID in environment') unless @USERNAME?
-    return @die new Error('Missing DEPLOYINATOR_TOKEN in environment') unless @PASSWORD?
-    return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @HOST?
-    return @die new Error('Missing project name') unless @project_name?
+    return @die new Error('Missing DEPLOYINATOR_UUID in environment') unless @username?
+    return @die new Error('Missing DEPLOYINATOR_TOKEN in environment') unless @password?
+    return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @host?
+    return @die new Error('Missing project name') unless @projectName?
 
     @deploy()
 
   deploy: =>
-    requestOptions =
+    options =
+      uri: "/status/#{@dockerUser}/#{@projectName}"
+      baseUrl: @host
+      auth: {@username, @password}
       json: true
-      method: 'GET'
-      uri: "https://#{@HOST}/status/#{@user}/#{@project_name}"
-      auth:
-        user: @USERNAME
-        password: @PASSWORD
-    debug 'requestOptions', requestOptions
-    request requestOptions, (error, response, body) =>
+
+    debug 'request.get', options
+    request.get options, (error, response, body) =>
       return @die error if error?
       return @die new Error("Deploy failed") if response.statusCode >= 400
       active = body?.service?.active

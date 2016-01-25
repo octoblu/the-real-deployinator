@@ -8,64 +8,68 @@ debug     = require('debug')('deployinator:check')
 class DeployinatorRollback
   parseOptions: =>
     commander
-      .usage '[options] <project name>'
-      .option '-u, --user <user>', 'Docker image user [octoblu]'
+      .usage '[options] <project-name>'
+      .option '-h, --host <https://deployinate.octoblu.com>',
+        'URI where deployinate-service is running (env: DEPLOYINATE_HOST)'
+      .option '-u, --user <octoblu>', 'Docker image user'
       .parse process.argv
 
-    @project_name = _.first commander.args
+    @projectName = _.first commander.args
+    @host = commander.host ? process.env.DEPLOYINATE_HOST || 'https://deployinate.octoblu.com'
     @user = commander.user ? 'octoblu'
-    @USERNAME = process.env.DEPLOYINATOR_UUID
-    @PASSWORD = process.env.DEPLOYINATOR_TOKEN
-    @HOST = process.env.DEPLOYINATOR_HOST
+
+    @username = process.env.DEPLOYINATOR_UUID
+    @password = process.env.DEPLOYINATOR_TOKEN
 
   run: =>
     @parseOptions()
 
-    return @die new Error('Missing DEPLOYINATOR_UUID in environment') unless @USERNAME?
-    return @die new Error('Missing DEPLOYINATOR_TOKEN in environment') unless @PASSWORD?
-    return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @HOST?
-    return @die new Error('Missing project name') unless @project_name?
+    return @die new Error('Missing DEPLOYINATOR_UUID in environment') unless @username?
+    return @die new Error('Missing DEPLOYINATOR_TOKEN in environment') unless @password?
+    return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @host?
+    return @die new Error('Missing project-name') unless @projectName?
 
     @deploy()
 
   deploy: =>
     console.log ""
-    console.log "=>", @project_name
+    console.log "=>", @projectName
     console.log ""
 
-    requestOptions =
+    options =
+      uri: "/status/#{@user}/#{@projectName}"
+      baseUrl: @host
+      auth: {@username, @password}
       json: true
-      method: 'GET'
-      uri: "https://#{@HOST}/status/#{@user}/#{@project_name}"
-      auth:
-        user: @USERNAME
-        password: @PASSWORD
-    debug 'requestOptions', requestOptions
-    request requestOptions, (error, response, body) =>
+
+    debug 'request.get', options
+    request.get options, (error, response, body) =>
       return @die error if error?
       return @die new Error("[#{response.statusCode}] Rollback failed: #{body}") if response.statusCode >= 400
       activeColor = body?.service?.active
 
       console.log "Active color is: #{colors[activeColor] activeColor}"
+
       if activeColor == 'green'
         newColor = 'blue'
       else
         newColor = 'green'
+
       console.log "Switching to #{colors[newColor] newColor}"
 
-      requestOptions =
+      options =
+        uri: "/rollback/#{@user}/#{@projectName}"
+        baseUrl: @host
+        auth: {@username, @password}
         json: true
-        method: 'POST'
-        uri: "https://#{@HOST}/rollback/#{@user}/#{@project_name}"
-        auth:
-          user: @USERNAME
-          password: @PASSWORD
-      debug 'requestOptions', requestOptions
-      request requestOptions, (error, response, body) =>
+
+      debug 'request.post', options
+      request.post options, (error, response, body) =>
         return @die error if error?
         return @die new Error("Rollback failed") if response.statusCode >= 400
 
-        console.log "Started healthcheck for #{colors[newColor] "#{@user}-#{@project_name}-#{newColor}"}"
+        healthcheckRecord = "#{@user}-#{@projectName}-#{newColor}"
+        console.log "Started healthcheck for #{colors[newColor] healthcheckRecord}"
         console.log ""
 
         process.exit 0
