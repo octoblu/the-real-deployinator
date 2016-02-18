@@ -7,6 +7,7 @@ class Command
       .version packageJSON.version
       .command 'active', 'active color of a deploy'
       .command 'deploy', 'deploy an application'
+      .command 'deploytraefik', 'deploy an application to traefik'
       .command 'list', 'list available tags'
       .command 'status', 'status of a deploy'
       .command 'rollback', 'rollback a deploy'
