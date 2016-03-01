@@ -37,7 +37,7 @@ class DeployinatorDeploy
     console.log ""
 
     options =
-      uri: "/deploy"
+      uri: "/deployments"
       baseUrl: @host
       auth: {@username, @password}
       json:

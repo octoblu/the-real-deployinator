@@ -1,26 +1,18 @@
 {
   "name": "the-real-deployinator",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "Deployinator for deployinate",
   "main": "index.js",
   "scripts": {
     "test": "exit 0"
   },
   "bin": {
-    "t1000-active": "./command-active.js",
     "t1000-deploy": "./command-deploy.js",
-    "t1000-deploytraefik": "./command-deploytraefik.js",
     "t1000-list": "./command-list.js",
     "t1000-status": "./command-status.js",
-    "t1000-rollback": "./command-rollback.js",
-    "t1000-worker": "./command-worker.js",
-    "deployinator-active": "./command-active.js",
     "deployinator-deploy": "./command-deploy.js",
-    "deployinator-deploytraefik": "./command-deploytraefik.js",
     "deployinator-list": "./command-list.js",
     "deployinator-status": "./command-status.js",
-    "deployinator-rollback": "./command-rollback.js",
-    "deployinator-worker": "./command-worker.js",
     "t1000": "./command.js",
     "deployinator": "./command.js"
   },
