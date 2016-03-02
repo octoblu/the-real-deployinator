@@ -1,6 +1,6 @@
 {
   "name": "the-real-deployinator",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Deployinator for deployinate",
   "main": "index.js",
   "scripts": {
