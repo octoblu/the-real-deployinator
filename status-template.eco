@@ -1,0 +1,17 @@
+
+[info]
+  travis:       {{{ context.status.travis }}}
+  majorVersion: {{{ context.majorVersion }}}
+  minorVersion: {{{ context.minorVersion }}}
+
+[deployments]
+{{#context.deployments}}
+  {{{ key }}}
+    deployAt: {{{ deployAt }}}
+    status:   {{{ status }}}
+{{/context.deployments}}
+
+[servers]
+{{#context.servers}}
+  {{{ name }}}: {{{ url }}}
+{{/context.servers}}
