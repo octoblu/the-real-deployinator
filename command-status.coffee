@@ -61,7 +61,9 @@ class DeployinatorStatus
     context.minorVersion = @formatVersion context.minorVersion
     context.status.travis = @formatTravisStatus context.status.travis
     context.deployments = _.map data.deployments, @formatDeployment
+    context.deployments = _.sortBy context.deployments, 'deployAt'
     context.servers = _.map data.servers, (url, name) => {name, url}
+    context.servers = _.sortBy context.servers, 'name'
 
     template = fs.readFileSync(path.join(__dirname, 'status-template.eco'), 'utf-8')
     console.log Mustache.render template, {context}
