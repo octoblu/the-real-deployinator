@@ -1,6 +1,7 @@
 
 [info]
   travis:       {{{ context.status.travis }}}
+  quay:         {{{ context.status.quay }}}
   majorVersion: {{{ context.majorVersion }}}
   minorVersion: {{{ context.minorVersion }}}
 

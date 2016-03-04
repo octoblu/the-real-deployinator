@@ -64,6 +64,7 @@ class DeployinatorStatus
     context.deployments = _.sortBy context.deployments, 'deployAt'
     context.servers = _.map data.servers, (url, name) => {name, url}
     context.servers = _.sortBy context.servers, 'name'
+    context.status.quay = @formatQuayStatus context.quay
 
     template = fs.readFileSync(path.join(__dirname, 'status-template.eco'), 'utf-8')
     console.log Mustache.render template, {context}
@@ -82,6 +83,19 @@ class DeployinatorStatus
   formatTravisStatus: (msg) =>
     return colors.green msg if _.contains msg, 'successful'
     return colors.yellow msg if _.contains msg, 'checking'
+    return colors.red msg
+
+  formatQuayStatus: (build) =>
+    return 'unknown' unless build?
+
+    {tag, phase}  = build
+    msg = "#{phase}: #{tag}"
+    return colors.green msg if phase == 'complete'
+    return colors.yellow msg if phase == 'building'
+    return colors.yellow msg if phase == 'pulling'
+    return colors.yellow msg if phase == 'build-scheduled'
+    return colors.yellow msg if phase == 'pushing'
+    return colors.cyan msg if phase == 'waiting'
     return colors.red msg
 
   formatVersion: (version) =>
