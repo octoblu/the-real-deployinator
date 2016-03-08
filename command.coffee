@@ -10,6 +10,7 @@ class Command
       .command 'postpone', 'postpone a deploy'
       .command 'schedule', 'schedule a deploy'
       .command 'status', 'status of a deploy'
+      .command 'watch', 'watch the status of a deploy'
       .parse process.argv
 
     unless commander.runningCommand

@@ -1,6 +1,6 @@
 {
   "name": "the-real-deployinator",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Deployinator for deployinate",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/octoblu/deployinator#readme",
   "dependencies": {
+    "cli-clear": "^1.0.4",
     "coffee-script": "^1.9.3",
     "colors": "^1.1.2",
     "commander": "^2.8.1",
