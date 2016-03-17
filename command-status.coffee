@@ -1,5 +1,4 @@
 _         = require 'lodash'
-cliClear  = require 'cli-clear'
 colors    = require 'colors'
 Mustache  = require 'mustache'
 fs        = require 'fs'
@@ -15,7 +14,6 @@ class DeployinatorStatus
       .usage '[options] <project-name>'
       .option '-h, --host <https://deployinate.octoblu.com>',
         'URI where deployinate-service is running (env: DEPLOYINATE_HOST)'
-      .option '-i, --interval <5>', 'Interval to run (in seconds)', 5, commander.parseInt
       .option '-j, --json', 'Print json'
       .option '-u, --user <octoblu>', 'Docker image user]'
       .parse process.argv
@@ -23,7 +21,6 @@ class DeployinatorStatus
     @projectName = _.first commander.args
     @host = commander.host ? process.env.DEPLOYINATE_HOST || 'https://deployinate.octoblu.com'
     @dockerUser = commander.user ? 'octoblu'
-    @interval = commander.interval
     @username = process.env.DEPLOYINATOR_UUID
     @password = process.env.DEPLOYINATOR_TOKEN
     @json = commander.json
@@ -36,13 +33,8 @@ class DeployinatorStatus
     return @die new Error('Missing DEPLOYINATOR_HOST in environment') unless @host?
     return @die new Error('Missing project name') unless @projectName?
 
-    @singleRun()
-
-  singleRun: =>
     @getStatus (error, status) =>
       return @die error if error?
-      cliClear()
-      setTimeout @singleRun, (1000 * @interval)
       return @printJSON status if @json
       return @printHumanReadable status
 
@@ -75,10 +67,7 @@ class DeployinatorStatus
     context.status.quay = @formatQuayStatus context.quay
 
     template = fs.readFileSync(path.join(__dirname, 'status-template.eco'), 'utf-8')
-    output = Mustache.render template, {context}
-
-    console.log new Date()
-    console.log @head(output, lines: 40)
+    console.log Mustache.render template, {context}
 
   formatDeployment: (deployment) =>
     deployment = _.cloneDeep deployment
@@ -113,8 +102,7 @@ class DeployinatorStatus
     return colors.red('unknown') unless version?
     colors.magenta version
 
-  head: (str, {lines=40}={}) =>
-    str.split('\n')[0..lines].join('\n')
+
 
   die: (error) =>
     if 'Error' == typeof error

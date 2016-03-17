@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 require('coffee-script/register');
-require('./command-status.coffee');
+require('./command-watch.coffee');
