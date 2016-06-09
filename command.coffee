@@ -5,6 +5,7 @@ class Command
   run: =>
     commander
       .version packageJSON.version
+      .command 'cancel', 'cancel a(n) deploy'
       .command 'deploy', 'deploy an application'
       .command 'list', 'list available tags'
       .command 'postpone', 'postpone a deploy'
