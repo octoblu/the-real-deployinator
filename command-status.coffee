@@ -40,7 +40,7 @@ class DeployinatorStatus
 
   getStatus: (callback) =>
     options =
-      uri: "/status/#{@dockerUser}/#{@projectName}"
+      uri: "/v2/status/#{@dockerUser}/#{@projectName}"
       baseUrl: @host
       auth: {@username, @password}
       json: true
@@ -62,7 +62,6 @@ class DeployinatorStatus
     context.status.travis = @formatTravisStatus context.status.travis
     context.deployments = _.map data.deployments, @formatDeployment
     context.deployments = _.sortBy context.deployments, 'deployAt'
-    context.servers = _.map data.servers, (url, name) => {name, url}
     context.servers = _.sortBy context.servers, 'name'
     context.status.quay = @formatQuayStatus context.quay
 

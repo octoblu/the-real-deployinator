@@ -14,5 +14,5 @@
 
 [servers]
 {{#context.servers}}
-  {{{ name }}}: {{{ url }}}
+  {{{ name }}}: {{{version}}}: {{{ url }}}
 {{/context.servers}}
